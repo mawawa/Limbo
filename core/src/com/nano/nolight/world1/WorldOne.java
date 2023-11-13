@@ -49,6 +49,7 @@ public class WorldOne extends ApplicationAdapter implements GameObject {
 
     @Override
     public void render() {
+
         //clear the scene frame
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
