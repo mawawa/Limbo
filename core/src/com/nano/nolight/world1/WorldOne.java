@@ -5,21 +5,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.nano.nolight.interfaces.GameObject;
+import com.nano.nolight.world1.ground.Ground;
 import com.nano.nolight.world1.player.PlayerOne;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WorldOne extends ApplicationAdapter implements GameObject {
-
+    Body body;
     private Box2DDebugRenderer debugRenderer;
     //Define the variable in world one.
     private OrthographicCamera orthographicCamera;
     private World world;
     private List<GameObject> worldOneObjects;
+    private Cameraman cameraman;
+    private PlayerOne player1;
 
 
     @Override
@@ -28,12 +32,18 @@ public class WorldOne extends ApplicationAdapter implements GameObject {
         this.world = new World(new Vector2(0, -10), true);
         //create the debugger.
         this.debugRenderer = new Box2DDebugRenderer();
-        //create an orthographic camera
-        this.orthographicCamera = new OrthographicCamera(1920, 1080);
+
+        //create a new cameramen
+
 
         //Add the objects for world 1.
+
         worldOneObjects = new ArrayList<>();
-        worldOneObjects.add(new PlayerOne());
+        worldOneObjects.add(new Ground(world));
+        this.player1 = new PlayerOne(world);
+        worldOneObjects.add(player1);
+        this.cameraman = new Cameraman(player1);
+        worldOneObjects.add(new Cameraman(player1));
 
     }
 
@@ -47,7 +57,7 @@ public class WorldOne extends ApplicationAdapter implements GameObject {
             g.render();
         }
         world.step(1/60f, 6, 2);
-        debugRenderer.render(world,orthographicCamera.combined);
+        debugRenderer.render(world,cameraman.getShot().combined);
     }
 
     @Override
@@ -56,5 +66,10 @@ public class WorldOne extends ApplicationAdapter implements GameObject {
             g.dispose();
         }
 
+    }
+
+    @Override
+    public Body getBody() {
+        return this.body;
     }
 }
